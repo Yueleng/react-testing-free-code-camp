@@ -1,9 +1,20 @@
+const visualOptions = {
+  apiKey: process.env.SCREENER_API_KEY,
+  projectName: "new-app-2",
+  scrollAndStitchScreenshots: true,
+};
+const sauceOptions = {
+  username: process.env.SAUCE_USERNAME,
+  accesskey: process.env.SAUCE_ACCESS_KEY,
+};
+
 exports.config = {
   //
   // ====================
   // Runner Configuration
   // ====================
   //
+  runner: "local",
   //
   // =================
   // Service Providers
@@ -57,7 +68,11 @@ exports.config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 10,
+  maxInstances: 100,
+  hostname: "hub.screener.io",
+  port: 443,
+  protocol: "https",
+  path: "/wd/hub",
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -68,14 +83,35 @@ exports.config = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 5,
+      // maxInstances: 5,
       //
       browserName: "chrome",
+      platformName: "windows 10",
+      browserVersion: "latest",
       acceptInsecureCerts: true,
+      "sauce:options": {
+        ...sauceOptions,
+      },
+      "sauce:visual": {
+        ...visualOptions,
+        viewportSize: "1366x768",
+      },
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
+    },
+    {
+      browserName: "safari",
+      platformName: "macOS 10.15",
+      browserVersion: "latest",
+      "sauce:options": {
+        ...sauceOptions,
+      },
+      "sauce:visual": {
+        ...visualOptions,
+        viewportSize: "375x812",
+      },
     },
   ],
   //
@@ -125,7 +161,15 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ["chromedriver", "sauce"],
+  services: [
+    "chromedriver",
+    [
+      "sauce",
+      {
+        sauceConnect: true,
+      },
+    ],
+  ],
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

@@ -48,7 +48,8 @@ jobs:
           cd my-app-deployed-to-azure
           npm start & 
           npx wait-on --timeout 60000
-      - name: Run visual tests 👁
-        run: |
-          cd my-app-deployed-to-azure
-          npm run test:visual
+      # no Account for visual test.
+      # - name: Run visual tests 👁
+      #   run: |
+      #     cd my-app-deployed-to-azure
+      #     npm run test:visual
