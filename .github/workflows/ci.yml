@@ -46,7 +46,7 @@ jobs:
       - name: Start the app 📤
         run: |
           cd my-app-deployed-to-azure
-          npm start
+          npm start & 
           npx wait-on --timeout 60000
       - name: Run visual tests 👁
         run: |
